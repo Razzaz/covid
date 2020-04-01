@@ -25,7 +25,7 @@ public class CheckFragment extends Fragment {
         buttonCheck.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), MoveActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                startActivity(new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), CheckActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         return view;
