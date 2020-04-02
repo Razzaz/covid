@@ -8,6 +8,7 @@
     tools:context=".CheckActivity">
 
     <TextView
+        android:id="@+id/test_array"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/cardView_check"
@@ -39,7 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
+                    android:id="@+id/question"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="30dp"
@@ -47,11 +50,12 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/circularstdbook"
-                    android:text="Napas kamu sesak atau dada terasa berat?"
+                    android:text="Apakah kamu mengalami demam dalam 14 hari terakhir?"
                     android:textAlignment="center"
                     android:textColor="@color/colorAccent"
                     android:gravity="center">
                 </TextView>
+
             </LinearLayout>
 
             <LinearLayout
@@ -61,7 +65,8 @@
                 android:layout_marginBottom="10dp"
                 android:layout_gravity="center">
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -71,11 +76,13 @@
                     android:textColor="@color/colorPrimaryDark"
                     style="?attr/borderlessButtonStyle"
                     />
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/circularstdbold"
+                    android:onClick="loadQuestion"
                     android:text="YA"
                     android:textColor="@color/colorPrimaryDark"
                     style="?attr/borderlessButtonStyle"/>

@@ -4,12 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 import java.util.Timer;
@@ -23,13 +29,23 @@ public class IntroActivity extends AppCompatActivity {
     int currentPageCounter = 0;
     LinearLayout dotsLayout;
     int customPosition = 0;
+    Button mLoginButton;
+    TextView mRegisterButton;
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //transparent statusBar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
+        fAuth = FirebaseAuth.getInstance();
+        if(fAuth.getCurrentUser() != null){
+            boolean emailVerified = FirebaseAuth.getInstance().getCurrentUser().isEmailVerified();
+            if(emailVerified) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            }
+        }
         //hide actionBar
         try
         {
@@ -37,6 +53,10 @@ public class IntroActivity extends AppCompatActivity {
         }
         catch (NullPointerException ignored){}
         setContentView(R.layout.activity_intro);
+        //new EulaActivity(this).show();
+
+        mLoginButton    =   findViewById(R.id.buttonLogin);
+        mRegisterButton =   findViewById(R.id.textSignUp);
 
         // Find view by id
         dotsLayout = findViewById(R.id.dotsContainer);
@@ -84,6 +104,21 @@ public class IntroActivity extends AppCompatActivity {
                 handler.post(update);
             }
         }, 3000,3000);
+
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            }
+        });
+
+        mRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+            }
+        });
+
     }
 
     // This is for the dots
