@@ -3,16 +3,23 @@ package com.example.covid;
 
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
@@ -21,6 +28,8 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -57,6 +66,79 @@ public class BackgroundService extends Service {
                 onNewLocation(locationResult.getLastLocation());
             }
         };
+
+        createLocationRequest();
+        getLatLocation();
+
+        HandlerThread handlerThread = new HandlerThread("covid");
+        handlerThread.start();
+        mServiceHandler = new Handler(handlerThread.getLooper());
+        mNotificationManager = (NotificationManager)getSystemService((NOTIFICATION_SERVICE));
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID,
+                    getString(R.string.app_name),
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION, false);
+        if(startedFromNotification)
+        {
+            removeLocationUpdates();
+            stopSelf();
+        }
+
+        return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mChangingConfiguration = true;
+    }
+
+    public void removeLocationUpdates() {
+        try{
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+            Common.setRequestingLocationUpdates(this, false);
+            stopSelf();
+        }
+        catch (SecurityException ex){
+            Common.setRequestingLocationUpdates(this, true);
+            Log.e("covid", "Couldnt remove updates"+ex);
+        }
+    }
+
+    private void getLatLocation() {
+        try{
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnCompleteListener(new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            if(task.isSuccessful() && task.getResult() != null)
+                                mLocation = task.getResult();
+                            else
+                                Log.e("covid", "Failed to get location");
+                        }
+                    });
+        }
+        catch (SecurityException ex){
+            Log.e("covid", "Lost location permission"+ex);
+        }
+
+    }
+
+    private void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(UPDATE_INTERVAL_IN_MILL);
+        locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MIL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
     }
 
     private void onNewLocation(Location lastLocation) {
@@ -82,10 +164,17 @@ public class BackgroundService extends Service {
                 .addAction(R.drawable.ic_launch_black_24dp, "Launch", activityPendingIntent)
                 .addAction(R.drawable.ic_cancel_black_24dp, "Remove", servicePendingIntent)
                 .setContentText(text)
-                .setContentTitle(Common.getLocationTitle(this));
+                .setContentTitle(Common.getLocationTitle(this))
+                .setOngoing(true)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setTicker(text)
+                .setWhen(System.currentTimeMillis());
 
-
-        return null;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            builder.setChannelId(CHANNEL_ID);
+        }
+        return builder.build();
     }
 
     private boolean serviceIsRunningInForeground(Context context) {
@@ -97,12 +186,45 @@ public class BackgroundService extends Service {
         return false;
     }
 
+    public void requestLocationUpdates() {
+        Common.setRequestingLocationUpdates(this, true);
+        startService(new Intent(getApplicationContext(), BackgroundService.class));
+        try{
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+        }
+        catch (SecurityException ex){
+            Log.e("covid", "Couldn't request it"+ex);
+        }
+    }
+
     public class LocalBinder extends Binder {
         BackgroundService getService() {return BackgroundService.this;}
     }
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        stopForeground(true);
+        return mBinder;
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        stopForeground(true);
+        mChangingConfiguration = false;
+        super.onRebind(intent);
+
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        if(!mChangingConfiguration && Common.requestingLocationUpdates(this))
+            startForeground(NOTI_ID, getNotification());
+        return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        mServiceHandler.removeCallbacks(null);
+        super.onDestroy();
     }
 }
