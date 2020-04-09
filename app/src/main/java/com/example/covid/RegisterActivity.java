@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @SuppressLint("Registered")
 public class RegisterActivity extends AppCompatActivity {
@@ -41,7 +42,11 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
+        try
+        {
+            Objects.requireNonNull(this.getSupportActionBar()).hide();
+        }
+        catch (NullPointerException ignored){}
         setContentView(R.layout.activity_register);
 
         mEmail      = findViewById(R.id.editEmail);

@@ -33,14 +33,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
         try
         {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
         }
         catch (NullPointerException ignored){}
 
-        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_login);
 
         mEmail      = findViewById(R.id.editEmail);
@@ -78,10 +76,12 @@ public class LoginActivity extends AppCompatActivity {
                             boolean emailVerified = FirebaseAuth.getInstance().getCurrentUser().isEmailVerified();
                             if(emailVerified){
                                 Toast.makeText(LoginActivity.this, "Log in Successfully.", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                IntroActivity.introActivity.finish();
+                                finish();
                             }else{
                                 Toast.makeText(LoginActivity.this, "Verify your Email.", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             }
 
                         }else{

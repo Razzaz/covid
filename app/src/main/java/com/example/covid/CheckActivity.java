@@ -2,6 +2,7 @@ package com.example.covid;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,12 +43,12 @@ public class CheckActivity extends AppCompatActivity {
     private DocumentReference questionRef = db.collection("question").document("q_one");
     private DocumentReference profile = db.collection("UsersData").document(userID);
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-
-
-
         //transparent statusBar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
@@ -170,6 +171,7 @@ public class CheckActivity extends AppCompatActivity {
     public void goToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void loadProfile(){
@@ -196,7 +198,4 @@ public class CheckActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
-
 }

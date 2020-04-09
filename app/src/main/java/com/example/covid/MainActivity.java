@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     public void setFragment(Fragment fragment) {
@@ -68,5 +69,11 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
     }
 }
