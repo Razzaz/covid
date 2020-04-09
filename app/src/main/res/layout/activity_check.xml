@@ -82,7 +82,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/circularstdbold"
-                    android:onClick="loadQuestion"
                     android:text="YA"
                     android:textColor="@color/colorPrimaryDark"
                     style="?attr/borderlessButtonStyle"/>
