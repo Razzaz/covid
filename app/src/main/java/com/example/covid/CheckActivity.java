@@ -128,7 +128,6 @@ public class CheckActivity extends AppCompatActivity {
                                 Toast.makeText(CheckActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                             }
                         });
-
             }
         });
 

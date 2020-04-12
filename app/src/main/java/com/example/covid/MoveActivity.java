@@ -23,7 +23,9 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -47,11 +49,12 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     private FusedLocationProviderClient mFusedLocation;
     private Runnable gpsRunnable;
     private Handler handler = new Handler();
-    private double latitude;
-    private double longitude;
+    //public double latitude;
+    //public double longitude;
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
     Button requestLocation, removeLocation;
     BackgroundService mService = null;
@@ -130,33 +133,35 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
                 if (location != null){
                     // Do it all with location
                     Log.d("My Current location", "Lat : " + location.getLatitude() + " Long : " + location.getLongitude());
-                    latitude = location.getLatitude();
-                    longitude = location.getLongitude();
-                    saveGeoLocation();
+                    //latitude = location.getLatitude();
+                    //longitude = location.getLongitude();
+                    //saveGeoLocation();
                 }
             }
         });
     }
 
-    public void saveGeoLocation(){
-        Map<String, Object> finalResult = new HashMap<>();
-        finalResult.put("latitude", latitude);
-        finalResult.put("longitude", longitude);
-
-        db.collection("GeoLocation").document("coordinate").set(finalResult)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(MoveActivity.this, "Lat : " + latitude + " Long : " + longitude, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MoveActivity.this, "Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//    public void saveGeoLocation(){
+//        Map<String, Object> finalResult = new HashMap<>();
+//        finalResult.put("Latitude", latitude);
+//        finalResult.put("Longitude", longitude);
+//
+//        db.collection("UsersData").document(userID).set(finalResult, SetOptions.merge())
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Toast.makeText(MoveActivity.this, "Lat : " + latitude + " Long : " + longitude, Toast.LENGTH_SHORT).show();
+//                        Log.e("GPS", "latitude");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(MoveActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+//                        Log.e("GPS", "latitudefail");
+//                    }
+//                });
+//    }
 
     @Override
     protected void onStart() {
@@ -206,5 +211,7 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
                     .toString();
             Toast.makeText(mService, data, Toast.LENGTH_SHORT).show();
         }
+        //latitude = event.getLocation().getLatitude();
+        //longitude= event.getLocation().getLongitude();
     }
 }

@@ -18,6 +18,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,9 +30,18 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class BackgroundService extends Service {
 
@@ -51,6 +61,11 @@ public class BackgroundService extends Service {
     private LocationCallback locationCallback;
     private Handler mServiceHandler;
     private Location mLocation;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+    private String latitude;
+    private String longitude;
 
     public  BackgroundService(){
 
@@ -153,7 +168,9 @@ public class BackgroundService extends Service {
     private Notification getNotification() {
         Intent intent = new Intent(this, BackgroundService.class);
         String text = Common.getLocationText(mLocation);
-
+        latitude = Common.getLatitudeText(mLocation);
+        longitude = Common.getLongitudeText(mLocation);
+        saveGeoLocation();
         intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
         PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -174,6 +191,7 @@ public class BackgroundService extends Service {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             builder.setChannelId(CHANNEL_ID);
         }
+
         return builder.build();
     }
 
@@ -226,5 +244,27 @@ public class BackgroundService extends Service {
     public void onDestroy() {
         mServiceHandler.removeCallbacks(null);
         super.onDestroy();
+    }
+
+    public void saveGeoLocation(){
+        Map<String, Object> finalResult = new HashMap<>();
+        finalResult.put("Latitude", latitude);
+        finalResult.put("Longitude", longitude);
+
+        db.collection("UsersData").document(userID).set(finalResult, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //Toast.makeText(MoveActivity.this, "Lat : " + latitude + " Long : " + longitude, Toast.LENGTH_SHORT).show();
+                        Log.e("GPS", "latitude");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                       // Toast.makeText(MoveActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                        Log.e("GPS", "latitudefail");
+                    }
+                });
     }
 }

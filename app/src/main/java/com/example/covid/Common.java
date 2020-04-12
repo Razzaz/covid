@@ -19,6 +19,14 @@ public class Common {
                 .toString();
     }
 
+    public static String getLatitudeText(Location mLocation) {
+        return String.valueOf(mLocation.getLatitude());
+    }
+
+    public static String getLongitudeText(Location mLocation) {
+        return String.valueOf(mLocation.getLongitude());
+    }
+
     public static CharSequence getLocationTitle(BackgroundService backgroundService) {
         return String.format("Location Updated: %1$s", DateFormat.getDateInstance().format(new Date()));
     }
