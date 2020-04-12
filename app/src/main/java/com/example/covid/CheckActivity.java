@@ -2,7 +2,6 @@ package com.example.covid;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,9 +17,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
-import org.w3c.dom.Text;
-
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,9 +30,8 @@ import java.util.Objects;
 public class CheckActivity extends AppCompatActivity {
 
     private TextView questionText;
-    private String profileName;
     private String levelResult;
-    private Date currentTime;
+    private String currentTime;
 
     private int tapCount = 0;
     public final ArrayList<Integer> point = new ArrayList<Integer>();
@@ -41,9 +39,6 @@ public class CheckActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     private DocumentReference questionRef = db.collection("question").document("q_one");
-    private DocumentReference profile = db.collection("UsersData").document(userID);
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +56,11 @@ public class CheckActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_check);
         questionText = findViewById(R.id.question);
+        Calendar calendar = Calendar.getInstance();
+        currentTime = DateFormat.getDateTimeInstance().format(calendar.getTime());
 
-        currentTime = Calendar.getInstance().getTime();
         Button buttonCount = findViewById(R.id.button_yes);
         Button buttonNotCount = findViewById(R.id.button_no);
-
 
         buttonCount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,27 +70,13 @@ public class CheckActivity extends AppCompatActivity {
 
                 if (tapCount >= 7){
                     if((point.get(0) == 1) && (point.get(1) == 2) && (point.get(2) == 3)){
-                        levelResult = "tinggi";
+                        levelResult = "ttinggi";
                     }else{
-                        levelResult = "rendah";
+                        levelResult = "rrendah";
                     }
                     saveResult();
                     goToMainActivity();
                 }
-                profile.get()
-                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                if (documentSnapshot.exists()){
-                                    profileName = documentSnapshot.getString("Name");
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                            }
-                        });
 
                 questionRef.get()
                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -127,24 +108,9 @@ public class CheckActivity extends AppCompatActivity {
                     }else{
                         levelResult = "rendah";
                     }
-                    loadProfile();
                     saveResult();
                     goToMainActivity();
                 }
-                profile.get()
-                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                if (documentSnapshot.exists()){
-                                    profileName = documentSnapshot.getString("1");
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                            }
-                        });
 
                 questionRef.get()
                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -174,21 +140,17 @@ public class CheckActivity extends AppCompatActivity {
         finish();
     }
 
-    public void loadProfile(){
-
-    }
-
     public void saveResult(){
-
         Map<String, Object> finalResult = new HashMap<>();
-        finalResult.put("level", levelResult);
-        finalResult.put("lastCheck", currentTime);
+        finalResult.put("Level", levelResult);
+        finalResult.put("Last Check", currentTime);
 
-        db.collection("result").document(profileName).set(finalResult)
+        db.collection("UsersData").document(userID).
+                set(finalResult, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(CheckActivity.this, profileName, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CheckActivity.this, userID, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
