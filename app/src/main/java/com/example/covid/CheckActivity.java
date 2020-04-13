@@ -22,7 +22,6 @@ import com.google.firebase.firestore.SetOptions;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -65,14 +64,15 @@ public class CheckActivity extends AppCompatActivity {
         buttonCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 tapCount = tapCount+1;
                 point.add(tapCount);
 
                 if (tapCount >= 7){
                     if((point.get(0) == 1) && (point.get(1) == 2) && (point.get(2) == 3)){
-                        levelResult = "ttinggi";
+                        levelResult = "tinggi";
                     }else{
-                        levelResult = "rrendah";
+                        levelResult = "rendah";
                     }
                     saveResult();
                     goToMainActivity();
