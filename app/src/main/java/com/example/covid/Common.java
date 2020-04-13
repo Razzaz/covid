@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.prefs.PreferenceChangeEvent;
 
 public class Common {
     public static final String KEY_REQUESTING_LOCATION_UPDATES = "LocationUpdateEnable";

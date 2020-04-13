@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -31,6 +33,9 @@ public class CheckActivity extends AppCompatActivity {
     private TextView questionText;
     private String levelResult;
     private String currentTime;
+    private Location mLocation;
+    private String latitude;
+    private String longitude;
 
     private int tapCount = 0;
     public final ArrayList<Integer> point = new ArrayList<Integer>();
@@ -55,6 +60,7 @@ public class CheckActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_check);
         questionText = findViewById(R.id.question);
+
         Calendar calendar = Calendar.getInstance();
         currentTime = DateFormat.getDateTimeInstance().format(calendar.getTime());
 
@@ -64,16 +70,10 @@ public class CheckActivity extends AppCompatActivity {
         buttonCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                tapCount = tapCount+1;
-                point.add(tapCount);
-
+                point.add(1);
+                tapCount++;
                 if (tapCount >= 7){
-                    if((point.get(0) == 1) && (point.get(1) == 2) && (point.get(2) == 3)){
-                        levelResult = "tinggi";
-                    }else{
-                        levelResult = "rendah";
-                    }
+                    checkResult();
                     saveResult();
                     goToMainActivity();
                 }
@@ -100,14 +100,10 @@ public class CheckActivity extends AppCompatActivity {
         buttonNotCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tapCount = tapCount+1;
-                point.add(tapCount);
+                point.add(0);
+                tapCount++;
                 if (tapCount >= 7){
-                    if((point.get(0) == 1) && (point.get(1) == 2) && (point.get(2) == 3)){
-                        levelResult = "tinggi";
-                    }else{
-                        levelResult = "rendah";
-                    }
+                    checkResult();
                     saveResult();
                     goToMainActivity();
                 }
@@ -130,7 +126,6 @@ public class CheckActivity extends AppCompatActivity {
                         });
             }
         });
-
     }
 
     public void goToMainActivity() {
@@ -139,23 +134,118 @@ public class CheckActivity extends AppCompatActivity {
         finish();
     }
 
+    public void checkResult(){
+        if(point.get(0) == 1 && point.get(1) == 2 && point.get(2) == 3 && point.get(3) == 1 && point.get(4) == 1 && point.get(5) == 1 && point.get(6) == 1) {levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "sedang";}
+        else if(point.get(0) == 1&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "sedang";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "rendah";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "sedang";}
+        else if(point.get(0) == 1&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 1&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 1&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 1&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+    }
+
     public void saveResult(){
         Map<String, Object> finalResult = new HashMap<>();
         finalResult.put("Level", levelResult);
         finalResult.put("Last Check", currentTime);
+        finalResult.put("Latitude", latitude);
+        finalResult.put("Longitude", longitude);
 
         db.collection("UsersData").document(userID).
                 set(finalResult, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(CheckActivity.this, userID, Toast.LENGTH_SHORT).show();
+                        Log.d("Status Check", "done");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(CheckActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                        Log.d("Status Check", "fail");
                     }
                 });
     }

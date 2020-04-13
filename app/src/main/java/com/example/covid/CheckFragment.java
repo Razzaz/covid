@@ -27,7 +27,9 @@ public class CheckFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), CheckActivity.class));
-                fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().finish();
+                //DO NOT RUN THIS CODE BELOW, BUG!
+                //fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         return view;

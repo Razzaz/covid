@@ -1,6 +1,5 @@
 package com.example.covid;
 
-
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -18,7 +17,6 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -129,7 +127,7 @@ public class BackgroundService extends Service {
         }
     }
 
-    private void getLatLocation() {
+    public void getLatLocation() {
         try{
             fusedLocationProviderClient.getLastLocation()
                     .addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -148,7 +146,7 @@ public class BackgroundService extends Service {
 
     }
 
-    private void createLocationRequest() {
+    public void createLocationRequest() {
         locationRequest = new LocationRequest();
         locationRequest.setInterval(UPDATE_INTERVAL_IN_MILL);
         locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MIL);
@@ -255,15 +253,13 @@ public class BackgroundService extends Service {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        //Toast.makeText(MoveActivity.this, "Lat : " + latitude + " Long : " + longitude, Toast.LENGTH_SHORT).show();
-                        Log.e("GPS", "latitude");
+                        Log.e("GPS", "succes");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                       // Toast.makeText(MoveActivity.this, "Error!", Toast.LENGTH_SHORT).show();
-                        Log.e("GPS", "latitudefail");
+                        Log.e("GPS", "fail");
                     }
                 });
     }
