@@ -1,6 +1,5 @@
 package com.example.covid;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -18,14 +17,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -37,9 +35,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,6 +47,7 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     private Handler handler = new Handler();
     //public double latitude;
     //public double longitude;
+    private ImageView gpsStatus;
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -97,11 +94,13 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         requestLocation = findViewById(R.id.button1);
                         removeLocation = findViewById(R.id.button0);
+                        gpsStatus = findViewById(R.id.gps_status);
 
                         requestLocation.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 mService.requestLocationUpdates();
+                                gpsStatus.setImageResource(R.drawable.image_profile);
                             }
                         });
 
@@ -109,6 +108,7 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
                             @Override
                             public void onClick(View view) {
                                 mService.removeLocationUpdates();
+                                gpsStatus.setImageResource(R.drawable.image_profile0);
                             }
                         });
 
@@ -131,37 +131,11 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
             @Override
             public void onSuccess(Location location) {
                 if (location != null){
-                    // Do it all with location
                     Log.d("My Current location", "Lat : " + location.getLatitude() + " Long : " + location.getLongitude());
-                    //latitude = location.getLatitude();
-                    //longitude = location.getLongitude();
-                    //saveGeoLocation();
                 }
             }
         });
     }
-
-//    public void saveGeoLocation(){
-//        Map<String, Object> finalResult = new HashMap<>();
-//        finalResult.put("Latitude", latitude);
-//        finalResult.put("Longitude", longitude);
-//
-//        db.collection("UsersData").document(userID).set(finalResult, SetOptions.merge())
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Toast.makeText(MoveActivity.this, "Lat : " + latitude + " Long : " + longitude, Toast.LENGTH_SHORT).show();
-//                        Log.e("GPS", "latitude");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(MoveActivity.this, "Error!", Toast.LENGTH_SHORT).show();
-//                        Log.e("GPS", "latitudefail");
-//                    }
-//                });
-//    }
 
     @Override
     protected void onStart() {

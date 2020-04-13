@@ -176,8 +176,8 @@ public class BackgroundService extends Service {
                 new Intent(this, MoveActivity.class), 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .addAction(R.drawable.ic_launch_black_24dp, "Launch", activityPendingIntent)
-                .addAction(R.drawable.ic_cancel_black_24dp, "Remove", servicePendingIntent)
+                //.addAction(R.drawable.ic_launch_black_24dp, "Launch", activityPendingIntent)
+                //.addAction(R.drawable.ic_cancel_black_24dp, "Remove", servicePendingIntent)
                 .setContentText(text)
                 .setContentTitle(Common.getLocationTitle(this))
                 .setOngoing(true)
