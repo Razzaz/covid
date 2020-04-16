@@ -27,7 +27,9 @@ public class HomeFragment extends Fragment {
     private TextView riskText;
     private TextView lastCheckText;
     private TextView nameText;
+    private TextView zoneText;
     private Button gpsButton;
+    private Button logoutButton;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
@@ -40,7 +42,9 @@ public class HomeFragment extends Fragment {
         nameText = view.findViewById(R.id.profile_name);
         riskText = view.findViewById(R.id.profile_risk);
         lastCheckText = view.findViewById(R.id.profile_lastcheck);
+        zoneText = view.findViewById(R.id.profile_zona);
         gpsButton = view.findViewById(R.id.profile_gps);
+        logoutButton = view.findViewById(R.id.profile_logout);
 
         profile.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -51,14 +55,17 @@ public class HomeFragment extends Fragment {
 
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     Log.d(TAG, "Current data: " + documentSnapshot.getData());
-                    nameText.setText(documentSnapshot.getString("Name"));
+                    String fullName = documentSnapshot.getString("Name");
+                    String[] firstName = fullName.split(" ");
+                    nameText.setText(firstName[0]);
                     lastCheckText.setText(documentSnapshot.getString("Last Check"));
                     riskText.setText(documentSnapshot.getString("Level"));
                 } else {
                     Log.d(TAG, "Current data: null");
-                    nameText.setText("");
-                    lastCheckText.setText("");
-                    riskText.setText("");
+                    nameText.setText("-");
+                    lastCheckText.setText("-");
+                    riskText.setText("-");
+                    zoneText.setText("-");
                 }
             }
         });
@@ -67,6 +74,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), MoveActivity.class));
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), IntroActivity.class));
+                getActivity().finish();
             }
         });
 

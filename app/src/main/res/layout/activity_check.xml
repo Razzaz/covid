@@ -43,7 +43,7 @@
                 android:id="@+id/question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="40dp"
                 android:text="Apakah kamu mengalami demam dalam 14 hari terakhir?"
                 android:textColor="@color/colorAccent"
                 android:textAlignment="center"
