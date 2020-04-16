@@ -154,7 +154,6 @@
                 android:layout_centerInParent="true"
                 android:text="logout"/>
 
-
         </RelativeLayout>
 
 </RelativeLayout>

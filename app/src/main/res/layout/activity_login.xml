@@ -35,6 +35,7 @@
         app:cardElevation="4dp">
 
         <LinearLayout
+            android:id="@+id/cvLinear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -80,6 +81,16 @@
                 android:inputType="textPassword" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:layout_gravity="center"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_margin="100dp"
+            android:progressDrawable="@drawable/circular_progress"/>
+
     </androidx.cardview.widget.CardView>
 
     <RelativeLayout

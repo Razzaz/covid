@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.Distribution;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -36,7 +39,9 @@ public class LoginActivity extends AppCompatActivity {
     Button mLoginBtn, mCreateBtn;
 
     private FirebaseAuth fAuth;
-    private int count = 0;
+
+    private ProgressBar spinner;
+    private LinearLayout loginPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,36 +64,39 @@ public class LoginActivity extends AppCompatActivity {
         forgotLink  = findViewById(R.id.forgot_pass);
        //mCreateBtn  = findViewById(R.id.buttonRegister);
 
-        if (count == 0) {
-            mLoginBtn.setEnabled(true);
-        }
+        loginPage = findViewById(R.id.cvLinear);
+        spinner = findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch(v.getId()) {
-                    case R.id.buttonLogin:
-                        count++;
-                        mLoginBtn.setEnabled(false);
-                        break;
-                }
 
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email is Required.");
+                    mLoginBtn.setEnabled(true);
                     return;
                 }
 
                 if(TextUtils.isEmpty(password)){
                     mPassword.setError("Password is Required.");
+                    mLoginBtn.setEnabled(true);
                     return;
                 }
 
                 if(password.length()<8){
                     mPassword.setError("Password must be >= 8 characters");
+                    mLoginBtn.setEnabled(true);
                     return;
+                }
+
+                else{
+                    mLoginBtn.setEnabled(false);
+                    spinner.setVisibility(View.VISIBLE);
+                    loginPage.setVisibility(View.GONE);
                 }
 
                 fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -103,11 +111,13 @@ public class LoginActivity extends AppCompatActivity {
                                 finish();
                             }else{
                                 Toast.makeText(LoginActivity.this, "Verify your Email.", Toast.LENGTH_SHORT).show();
+                                mLoginBtn.setEnabled(true);
                                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             }
 
                         }else{
                             Toast.makeText(LoginActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         }
                     }
                 });

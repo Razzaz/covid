@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ public class CheckActivity extends AppCompatActivity {
     private Location mLocation;
     private String latitude;
     private String longitude;
+
+    private ProgressBar spinner;
 
     private int tapCount = 0;
     private int countYes = 0;
@@ -72,17 +75,22 @@ public class CheckActivity extends AppCompatActivity {
         final Button buttonCount = findViewById(R.id.button_yes);
         final Button buttonNotCount = findViewById(R.id.button_no);
 
+        spinner = findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
+
         if (countYes == 0) {
             buttonCount.setEnabled(true);
         }
 
         buttonCount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 switch(view.getId()) {
                     case R.id.button_yes:
                         countYes++;
                         buttonCount.setEnabled(false);
+                        spinner.setVisibility(View.VISIBLE);
+                        questionText.setVisibility(View.GONE);
                         break;
                 }
                 point.add(1);
@@ -100,6 +108,8 @@ public class CheckActivity extends AppCompatActivity {
                                 if (documentSnapshot.exists()){
                                     String questionString = documentSnapshot.getString(Integer.toString(tapCount));
                                     questionText.setText(questionString);
+                                    questionText.setVisibility(View.VISIBLE);
+                                    spinner.setVisibility(View.GONE);
                                     buttonCount.setEnabled(true);
                                 }
                             }
@@ -108,6 +118,7 @@ public class CheckActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(CheckActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                                goToMainActivity();
                             }
                         });
             }
@@ -124,6 +135,8 @@ public class CheckActivity extends AppCompatActivity {
                     case R.id.button_no:
                         countNo++;
                         buttonNotCount.setEnabled(false);
+                        spinner.setVisibility(View.VISIBLE);
+                        questionText.setVisibility(View.GONE);
                         break;
                 }
                 point.add(0);
@@ -141,6 +154,8 @@ public class CheckActivity extends AppCompatActivity {
                                 if (documentSnapshot.exists()){
                                     String questionString = documentSnapshot.getString(Integer.toString(tapCount));
                                     questionText.setText(questionString);
+                                    questionText.setVisibility(View.VISIBLE);
+                                    spinner.setVisibility(View.GONE);
                                     buttonNotCount.setEnabled(true);
                                 }
                             }
@@ -149,6 +164,7 @@ public class CheckActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(CheckActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                                goToMainActivity();
                             }
                         });
             }
@@ -252,6 +268,7 @@ public class CheckActivity extends AppCompatActivity {
         else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
         else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
         else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
     }
 
     public void saveResult(){

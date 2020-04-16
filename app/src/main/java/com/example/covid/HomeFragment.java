@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -30,6 +31,8 @@ public class HomeFragment extends Fragment {
     private TextView zoneText;
     private Button gpsButton;
     private Button logoutButton;
+    private Button loadButton;
+    private ProgressBar spinner;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
