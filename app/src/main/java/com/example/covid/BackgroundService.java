@@ -168,7 +168,8 @@ public class BackgroundService extends Service {
         String text = Common.getLocationText(mLocation);
         latitude = Common.getLatitudeText(mLocation);
         longitude = Common.getLongitudeText(mLocation);
-        saveGeoLocation();
+        saveGeoLocationPrivate();
+        saveGeoLocationPublic();
         intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
         PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -244,12 +245,33 @@ public class BackgroundService extends Service {
         super.onDestroy();
     }
 
-    public void saveGeoLocation(){
+    public void saveGeoLocationPrivate(){
         Map<String, Object> finalResult = new HashMap<>();
         finalResult.put("Latitude", latitude);
         finalResult.put("Longitude", longitude);
 
         db.collection("UsersData").document(userID).set(finalResult, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e("GPS", "succes");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("GPS", "fail");
+                    }
+                });
+    }
+
+    public void saveGeoLocationPublic(){
+        Map<String, Object> finalResult = new HashMap<>();
+        finalResult.put("UserId", userID);
+        finalResult.put("Latitude", latitude);
+        finalResult.put("Longitude", longitude);
+
+        db.collection("GeoLocation").document().set(finalResult, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
