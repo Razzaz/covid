@@ -104,4 +104,13 @@
 
     </LinearLayout>
 
+    <Switch
+        android:id="@+id/allow"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:onClick="allowCheck"
+        android:layout_centerHorizontal="true"
+        android:text="allow"/>
+
+
 </RelativeLayout>

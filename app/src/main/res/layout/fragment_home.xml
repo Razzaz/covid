@@ -154,6 +154,14 @@
                 android:layout_centerInParent="true"
                 android:text="logout"/>
 
+            <Button
+                android:id="@+id/profile_checkin"
+                android:layout_below="@id/profile_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="checkin"/>
+
         </RelativeLayout>
 
 </RelativeLayout>

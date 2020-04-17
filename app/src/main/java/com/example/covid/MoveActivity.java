@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -50,6 +51,11 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     //public double latitude;
     //public double longitude;
     private ImageView gpsStatus;
+
+    private Switch switchAllow;
+    public static final String SWITCH1 = "switch1";
+    public static final String SHARED_PREFS = "sharedPrefs";
+
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -86,6 +92,9 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
         }
         catch (NullPointerException ignored){}
         setContentView(R.layout.activity_move);
+
+        switchAllow = findViewById(R.id.allow);
+        updateViews();
 
         Dexter.withActivity(this)
                 .withPermissions(Arrays.asList(
@@ -185,6 +194,22 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
         activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
         // this lines ensure only the status-bar to become transparent without affecting the nav-bar
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
+    public void allowCheck(View view){
+        SharedPreferences sharedPref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(SWITCH1, switchAllow.isChecked());
+        editor.apply();
+
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+    }
+
+    public void updateViews() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        boolean switchOnOff = sharedPreferences.getBoolean(SWITCH1, false);
+        switchAllow.setChecked(switchOnOff);
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

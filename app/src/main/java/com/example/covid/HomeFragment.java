@@ -1,13 +1,14 @@
 package com.example.covid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -22,6 +23,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.Objects;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.covid.MoveActivity.SHARED_PREFS;
+import static com.example.covid.MoveActivity.SWITCH1;
+
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
@@ -31,8 +36,8 @@ public class HomeFragment extends Fragment {
     private TextView zoneText;
     private Button gpsButton;
     private Button logoutButton;
-    private Button loadButton;
-    private ProgressBar spinner;
+    private Button checkingButton;
+    private boolean buttonOnOff;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
@@ -48,6 +53,10 @@ public class HomeFragment extends Fragment {
         zoneText = view.findViewById(R.id.profile_zona);
         gpsButton = view.findViewById(R.id.profile_gps);
         logoutButton = view.findViewById(R.id.profile_logout);
+
+        checkingButton = view.findViewById(R.id.profile_checkin);
+
+        updateCheckInButton();
 
         profile.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -90,6 +99,12 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void updateCheckInButton() {
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        buttonOnOff = sharedPref.getBoolean(SWITCH1, false);
+        checkingButton.setEnabled(buttonOnOff);
     }
 
 }
