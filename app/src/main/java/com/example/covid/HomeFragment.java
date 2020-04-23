@@ -1,6 +1,5 @@
 package com.example.covid;
-
-import android.content.Context;
+;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -58,6 +57,13 @@ public class HomeFragment extends Fragment {
 
         updateCheckInButton();
 
+        checkingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(requireActivity().getApplicationContext(), CheckInActivity.class));
+            }
+        });
+
         profile.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -85,7 +91,7 @@ public class HomeFragment extends Fragment {
         gpsButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), MoveActivity.class));
+                startActivity(new Intent(requireActivity().getApplicationContext(), MoveActivity.class));
             }
         });
 
@@ -93,7 +99,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), IntroActivity.class));
+                startActivity(new Intent(requireActivity().getApplicationContext(), IntroActivity.class));
                 getActivity().finish();
             }
         });

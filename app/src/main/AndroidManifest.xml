@@ -17,6 +17,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".CheckActivity" />
+        <activity android:name=".CheckInActivity"/>
         <activity android:name=".IntroActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".MoveActivity" />

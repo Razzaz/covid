@@ -139,16 +139,16 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
                 }).check();
     }
 
-    private void getLocation(){
-        mFusedLocation.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null){
-                    Log.d("My Current location", "Lat : " + location.getLatitude() + " Long : " + location.getLongitude());
-                }
-            }
-        });
-    }
+//    private void getLocation(){
+//        mFusedLocation.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                if (location != null){
+//                    Log.d("My Current location", "Lat : " + location.getLatitude() + " Long : " + location.getLongitude());
+//                }
+//            }
+//        });
+//    }
 
     @Override
     protected void onStart() {

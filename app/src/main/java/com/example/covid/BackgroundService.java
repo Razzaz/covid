@@ -151,7 +151,6 @@ public class BackgroundService extends Service {
         locationRequest.setInterval(UPDATE_INTERVAL_IN_MILL);
         locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MIL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
     }
 
     private void onNewLocation(Location lastLocation) {
