@@ -268,15 +268,13 @@ public class CheckActivity extends AppCompatActivity {
         else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 1){ levelResult = "tinggi";}
         else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 1&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
         else if(point.get(0) == 0&&point.get(1) == 1&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 1&&point.get(5) == 1&&point.get(6) == 1){ levelResult = "tinggi";}
-        else if(point.get(0) == 0&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "tinggi";}
+        else if(point.get(0) == 0&&point.get(1) == 0&&point.get(2) == 0&&point.get(3) == 0&&point.get(4) == 0&&point.get(5) == 0&&point.get(6) == 0){ levelResult = "rendah";}
     }
 
     public void saveResult(){
         Map<String, Object> finalResult = new HashMap<>();
         finalResult.put("Level", levelResult);
         finalResult.put("Last Check", currentTime);
-        //finalResult.put("Latitude", latitude);
-        //finalResult.put("Longitude", longitude);
 
         db.collection("UsersData").document(userID).
                 set(finalResult, SetOptions.merge())

@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_check"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
+    android:padding="30dp"
     tools:context=".MoveActivity">
 
     <TextView
@@ -19,98 +16,119 @@
         android:fontFamily="@font/circularstdbold"
         android:gravity="center"
         android:layout_above="@+id/cv"
-        android:text="GPS Settings"
+        android:text="Settings"
         android:textColor="#ffff"
         android:textSize="30sp" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="22dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
         android:layout_alignParentStart="true"
         android:layout_centerInParent="true"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp">
+        app:cardBackgroundColor="#2276df"
+        app:cardCornerRadius="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/gps_status"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/image_profile0"
-                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/textGPS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="Allow GPS Background"
+                android:layout_gravity="center"
+                android:fontFamily="@font/circularstdbold"
+                android:textSize="15sp"
+                android:textColor="#ffff"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp">
+
+
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/button_semi_rounded_1"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/circularstdbold"
+                    android:textAllCaps="false"
+                    android:textColor="#ffff"/>
+
+                <Button
+                    android:id="@+id/button0"
+                    android:background="@drawable/button_semi_rounded"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:fontFamily="@font/circularstdbold"
+                    android:textAllCaps="false"
+                    android:textColor="#ffff"/>
+
+            </RelativeLayout>
+
 
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <androidx.cardview.widget.CardView
         android:layout_below="@+id/cv"
-        android:layout_alignStart="@+id/cv"
-        android:layout_alignEnd="@+id/cv"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="-50dp"
-        android:layout_marginRight="60dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:baselineAligned="false"
-        android:background="@drawable/button_rounded"
-        android:elevation="10dp">
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        app:cardBackgroundColor="#2276df"
+        app:cardCornerRadius="10dp">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button0"
+            <TextView
+                android:id="@+id/textCheckin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_marginStart="15dp"
+                android:text="Allow Checkin"
+                android:layout_gravity="center"
                 android:fontFamily="@font/circularstdbold"
-                android:text="Off"
-                android:textAllCaps="false"
-                android:textColor="#ffff"
-                style="?attr/borderlessButtonStyle"/>
+                android:textSize="15sp"
+                android:textColor="#ffff"/>
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+                <Switch
+                    android:id="@+id/allow"
+                    android:layout_marginEnd="15dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="allowCheck"
+                    android:theme="@style/SwitchTheme"
+                    android:layout_centerInParent="true"/>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="@font/circularstdbold"
-                android:text="On"
-                android:textAllCaps="false"
-                android:textColor="#ffff"
-                style="?attr/borderlessButtonStyle"/>
-
-        </RelativeLayout>
+            </RelativeLayout>
 
 
-    </LinearLayout>
+        </LinearLayout>
 
-    <Switch
-        android:id="@+id/allow"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:onClick="allowCheck"
-        android:layout_centerHorizontal="true"
-        android:text="allow"/>
+    </androidx.cardview.widget.CardView>
+
 
 
 </RelativeLayout>

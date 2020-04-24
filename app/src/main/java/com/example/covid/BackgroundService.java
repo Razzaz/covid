@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -61,6 +62,7 @@ public class BackgroundService extends Service {
     private Location mLocation;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference geoLocation = db.collection("GeoLocation");
     String userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     private String latitude;
     private String longitude;
@@ -123,7 +125,7 @@ public class BackgroundService extends Service {
         }
         catch (SecurityException ex){
             Common.setRequestingLocationUpdates(this, true);
-            Log.e("covid", "Couldnt remove updates"+ex);
+            Log.e("covid", "Couldn't remove updates"+ex);
         }
     }
 
@@ -253,7 +255,7 @@ public class BackgroundService extends Service {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.e("GPS", "succes");
+                        Log.e("GPS", "success");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -270,17 +272,17 @@ public class BackgroundService extends Service {
         finalResult.put("Latitude", latitude);
         finalResult.put("Longitude", longitude);
 
-        db.collection("GeoLocation").document().set(finalResult, SetOptions.merge())
+        geoLocation.document(userID).set(finalResult, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.e("GPS", "succes");
+                        Log.e("GPS", "success");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("GPS", "fail");
+                        Log.e("GPS", "failed");
                     }
                 });
     }

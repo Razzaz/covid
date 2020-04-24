@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -48,8 +49,6 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     private FusedLocationProviderClient mFusedLocation;
     private Runnable gpsRunnable;
     private Handler handler = new Handler();
-    //public double latitude;
-    //public double longitude;
     private ImageView gpsStatus;
 
     private Switch switchAllow;
@@ -83,7 +82,7 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         setTransparentStatusBarOnly(MoveActivity.this);
 
         try
@@ -107,13 +106,13 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         requestLocation = findViewById(R.id.button1);
                         removeLocation = findViewById(R.id.button0);
-                        gpsStatus = findViewById(R.id.gps_status);
+                        //gpsStatus = findViewById(R.id.gps_status);
 
                         requestLocation.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 mService.requestLocationUpdates();
-                                gpsStatus.setImageResource(R.drawable.image_profile);
+                                //gpsStatus.setImageResource(R.drawable.image_profile);
                             }
                         });
 
@@ -121,7 +120,7 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
                             @Override
                             public void onClick(View view) {
                                 mService.removeLocationUpdates();
-                                gpsStatus.setImageResource(R.drawable.image_profile0);
+                                //gpsStatus.setImageResource(R.drawable.image_profile0);
                             }
                         });
 
@@ -138,17 +137,6 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
                     }
                 }).check();
     }
-
-//    private void getLocation(){
-//        mFusedLocation.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-//            @Override
-//            public void onSuccess(Location location) {
-//                if (location != null){
-//                    Log.d("My Current location", "Lat : " + location.getLatitude() + " Long : " + location.getLongitude());
-//                }
-//            }
-//        });
-//    }
 
     @Override
     protected void onStart() {
@@ -180,11 +168,17 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     private void setButtonState(boolean isRequestEnable) {
         if(isRequestEnable){
             requestLocation.setEnabled(false);
+            requestLocation.setVisibility(View.GONE);
+            //gpsStatus.setImageResource(R.drawable.image_profile);
             removeLocation.setEnabled(true);
+            removeLocation.setVisibility(View.VISIBLE);
         }
         else{
             requestLocation.setEnabled(true);
+            requestLocation.setVisibility(View.VISIBLE);
+            //gpsStatus.setImageResource(R.drawable.image_profile0);
             removeLocation.setEnabled(false);
+            removeLocation.setVisibility(View.GONE);
         }
     }
 
@@ -215,14 +209,10 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onListenerLocation(SendLocationToActivity event){
         if(event != null){
-            String data = new StringBuilder()
-                    .append(event.getLocation().getLatitude())
-                    .append("/")
-                    .append(event.getLocation().getLongitude())
-                    .toString();
+            String data = event.getLocation().getLatitude() +
+                    "/" +
+                    event.getLocation().getLongitude();
             Toast.makeText(mService, data, Toast.LENGTH_SHORT).show();
         }
-        //latitude = event.getLocation().getLatitude();
-        //longitude= event.getLocation().getLongitude();
     }
 }
