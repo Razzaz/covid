@@ -10,22 +10,17 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.karumi.dexter.Dexter;
@@ -51,8 +46,12 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     private Handler handler = new Handler();
     private ImageView gpsStatus;
 
-    private Switch switchAllow;
     public static final String SWITCH1 = "switch1";
+
+    public static final String SWITCHTEST = "switchtest";
+    private Button buttonTest2, buttonTest3;
+    private boolean state;
+
     public static final String SHARED_PREFS = "sharedPrefs";
 
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -92,8 +91,24 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
         catch (NullPointerException ignored){}
         setContentView(R.layout.activity_move);
 
-        switchAllow = findViewById(R.id.allow);
-        updateViews();
+        buttonTest2 = findViewById(R.id.button2);
+        buttonTest3 = findViewById(R.id.button3);
+
+        updateState();
+
+        buttonTest2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonState(true);
+            }
+        });
+
+        buttonTest3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonState(false);
+            }
+        });
 
         Dexter.withActivity(this)
                 .withPermissions(Arrays.asList(
@@ -190,20 +205,45 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
-    public void allowCheck(View view){
-        SharedPreferences sharedPref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(SWITCH1, switchAllow.isChecked());
-        editor.apply();
+    public void buttonState(boolean state){
+        if(state){
+            buttonTest3.setVisibility(View.VISIBLE);
+            buttonTest2.setVisibility(View.GONE);
 
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        finish();
+            SharedPreferences sharedPref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SWITCHTEST, true);
+            editor.apply();
+
+        }
+        else{
+            buttonTest3.setVisibility(View.GONE);
+            buttonTest2.setVisibility(View.VISIBLE);
+
+            SharedPreferences sharedPref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SWITCHTEST, false);
+            editor.apply();
+
+        }
     }
 
-    public void updateViews() {
+    public void updateState() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        boolean switchOnOff = sharedPreferences.getBoolean(SWITCH1, false);
-        switchAllow.setChecked(switchOnOff);
+        boolean states = sharedPreferences.getBoolean(SWITCHTEST, false);
+        if(states){
+            buttonTest3.setVisibility(View.VISIBLE);
+            buttonTest2.setVisibility(View.GONE);
+        }
+        else{
+            buttonTest3.setVisibility(View.GONE);
+            buttonTest2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void saveSettings(View view){
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
