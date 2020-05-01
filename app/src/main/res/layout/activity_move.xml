@@ -140,6 +140,65 @@
 
     </androidx.cardview.widget.CardView>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv3"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/cv2"
+        app:cardBackgroundColor="#2276df"
+        app:cardCornerRadius="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="Allow Bluetooth"
+                android:layout_gravity="center"
+                android:fontFamily="@font/circularstdbold"
+                android:textSize="15sp"
+                android:textColor="#ffff"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp">
+
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/button_semi_rounded"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/circularstdbold"
+                    android:textAllCaps="false"
+                    android:textColor="#ffff"/>
+
+                <Button
+                    android:id="@+id/button5"
+                    android:background="@drawable/button_semi_rounded_1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:fontFamily="@font/circularstdbold"
+                    android:textAllCaps="false"
+                    android:textColor="#ffff"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
     <Button
         android:id="@+id/settings_safe"
         android:layout_width="100dp"
@@ -152,7 +211,7 @@
         android:layout_marginTop="30dp"
         android:fontFamily="@font/circularstdbold"
         android:background="@drawable/button_rounded"
-        android:layout_below="@+id/cv2">
+        android:layout_below="@+id/cv3">
 
     </Button>
 

@@ -52,6 +52,10 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
     private Button buttonTest2, buttonTest3;
     private boolean state;
 
+    public static final String SWITCHBLE = "switchble";
+    private Button buttonTest4, buttonTest5;
+    private boolean stateBle;
+
     public static final String SHARED_PREFS = "sharedPrefs";
 
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -94,7 +98,11 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
         buttonTest2 = findViewById(R.id.button2);
         buttonTest3 = findViewById(R.id.button3);
 
+        buttonTest4 = findViewById(R.id.button4);
+        buttonTest5 = findViewById(R.id.button5);
+
         updateState();
+        updateBLEState();
 
         buttonTest2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +115,20 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
             @Override
             public void onClick(View view) {
                 buttonState(false);
+            }
+        });
+
+        buttonTest4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonBleState(true);
+            }
+        });
+
+        buttonTest5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonBleState(false);
             }
         });
 
@@ -228,6 +250,33 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
         }
     }
 
+    public void buttonBleState(boolean state){
+        if(state){
+            buttonTest5.setVisibility(View.VISIBLE);
+            buttonTest4.setVisibility(View.GONE);
+
+            startActivity(new Intent(getApplicationContext(), MonitoringActivity.class));
+
+            SharedPreferences sharedPref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SWITCHBLE, true);
+            editor.apply();
+
+        }
+        else{
+            buttonTest5.setVisibility(View.GONE);
+            buttonTest4.setVisibility(View.VISIBLE);
+
+            startActivity(new Intent(getApplicationContext(), MonitoringActivity.class));
+
+            SharedPreferences sharedPref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SWITCHBLE, false);
+            editor.apply();
+
+        }
+    }
+
     public void updateState() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         boolean states = sharedPreferences.getBoolean(SWITCHTEST, false);
@@ -238,6 +287,19 @@ public class MoveActivity extends AppCompatActivity implements SharedPreferences
         else{
             buttonTest3.setVisibility(View.GONE);
             buttonTest2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void updateBLEState() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        boolean states = sharedPreferences.getBoolean(SWITCHBLE, false);
+        if(states){
+            buttonTest5.setVisibility(View.VISIBLE);
+            buttonTest4.setVisibility(View.GONE);
+        }
+        else{
+            buttonTest5.setVisibility(View.GONE);
+            buttonTest4.setVisibility(View.VISIBLE);
         }
     }
 

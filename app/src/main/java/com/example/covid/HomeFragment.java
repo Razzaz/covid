@@ -24,7 +24,6 @@ import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.covid.MoveActivity.SHARED_PREFS;
-import static com.example.covid.MoveActivity.SWITCH1;
 import static com.example.covid.MoveActivity.SWITCHTEST;
 
 public class HomeFragment extends Fragment {
@@ -100,9 +99,9 @@ public class HomeFragment extends Fragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(requireActivity().getApplicationContext(), MonitoringActivity.class));
-                //getActivity().finish();
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(requireActivity().getApplicationContext(), IntroActivity.class));
+                getActivity().finish();
             }
         });
 

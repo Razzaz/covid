@@ -69,7 +69,8 @@ public class BeaconReferenceApplication extends Application implements Bootstrap
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.drawable.ic_logo);
-        //builder.setContentTitle("Scanning for Beacons");
+        //builder.setContentTitle("UI Safe");
+        builder.setContentText("Stay Safe");
         Intent intent = new Intent(this, MonitoringActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT

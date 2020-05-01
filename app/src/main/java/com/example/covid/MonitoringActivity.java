@@ -2,6 +2,8 @@ package com.example.covid;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.Manifest;
@@ -26,18 +28,19 @@ import org.altbeacon.beacon.Region;
 
 import java.util.Collection;
 
-/**
- *
- * @author dyoung
- * @author Matt Tyler
- */
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.covid.MoveActivity.SHARED_PREFS;
+import static com.example.covid.MoveActivity.SWITCHBLE;
+import static com.example.covid.MoveActivity.SWITCHTEST;
+
 public class MonitoringActivity extends AppCompatActivity  {
+
     protected static final String TAG = "MonitoringActivity";
     protected static final String TAG2 = "RangingActivity";
     private static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_BACKGROUND_LOCATION = 2;
     private BeaconManager beaconManager;
-    private Handler mServiceHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +113,9 @@ public class MonitoringActivity extends AppCompatActivity  {
 
             }
         }
+        BeaconReferenceApplication application = ((BeaconReferenceApplication) this.getApplicationContext());
+        application.disableMonitoring();
+        monitoringBleState();
 
         RangeNotifier rangeNotifier = new RangeNotifier() {
             @Override
@@ -128,6 +134,15 @@ public class MonitoringActivity extends AppCompatActivity  {
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
             beaconManager.addRangeNotifier(rangeNotifier);
         } catch (RemoteException e) {   }
+
+        int MONITORING_SCREEN = 2000;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MonitoringActivity.this, MoveActivity.class);
+                finish();
+            }
+        }, MONITORING_SCREEN);
 
     }
 
@@ -176,14 +191,20 @@ public class MonitoringActivity extends AppCompatActivity  {
         }
     }
 
-    public void onEnableClicked(View view) {
+    public void monitoringBleState() {
+        SharedPreferences sharedPref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        boolean monitoringState = sharedPref.getBoolean(SWITCHBLE, false);
+
         BeaconReferenceApplication application = ((BeaconReferenceApplication) this.getApplicationContext());
-        if (BeaconManager.getInstanceForApplication(this).getMonitoredRegions().size() > 0) {
+        if (BeaconManager.getInstanceForApplication(this).getMonitoredRegions().size() > 0 && monitoringState) {
+            //TODO: Shared Prefrence BLE here
+            Log.e("BUTTONBLE", "YA!");
             application.disableMonitoring();
-            ((Button)findViewById(R.id.enableButton)).setText("Re-Enable Monitoring");
+            //((Button)findViewById(R.id.enableButton)).setText("Re-Enable Monitoring");
         }
-        else {
-            ((Button)findViewById(R.id.enableButton)).setText("Disable Monitoring");
+        else{
+            Log.e("BUTTONBLE", "NOO!");
+            //((Button)findViewById(R.id.enableButton)).setText("Disable Monitoring");
             application.enableMonitoring();
         }
 
@@ -238,7 +259,6 @@ public class MonitoringActivity extends AppCompatActivity  {
             builder.show();
 
         }
-
     }
 
     public void updateLog(final String log) {
